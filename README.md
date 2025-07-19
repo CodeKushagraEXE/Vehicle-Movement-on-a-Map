@@ -12,7 +12,7 @@ A frontend-only React app that simulates a vehicle moving on a map using dummy d
 ## Tech Stack
 
 - React + Vite + TypeScript
-- Leaflet (via React-Leaflet)
+- Google Maps (via @react-google-maps/api)
 - Tailwind CSS
 
 ## Setup
@@ -44,13 +44,11 @@ A frontend-only React app that simulates a vehicle moving on a map using dummy d
 
 ## Dummy Data
 
-Edit `public/dummy-route.json` to change the route.
+Edit `src/dummy-route.json` to change the route.
 
----
+## Screenshot
 
-**Demo Screenshot:**
-
-![screenshot](https://user-images.githubusercontent.com/placeholder/vehicle-map-demo.png)
+![App Screenshot](./screenshot.png)
 
 ---
 
