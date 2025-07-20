@@ -13,11 +13,12 @@ type MapViewProps = {
   currentIdx: number;
   vehicleName: string;
   showNumbers?: boolean;
+  onCarClick?: () => void;
 };
 
 const containerStyle = {
   width: "100%",
-  height: "400px",
+  height: "350px",
   borderRadius: "12px",
   overflow: "hidden",
 };
@@ -29,6 +30,7 @@ const MapView: React.FC<MapViewProps> = ({
   currentIdx,
   vehicleName,
   showNumbers = false,
+  onCarClick,
 }) => {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string,
@@ -52,74 +54,75 @@ const MapView: React.FC<MapViewProps> = ({
   const currentPos = path[currentIdx] || defaultCenter;
 
   return (
-    <GoogleMap
-      mapContainerStyle={containerStyle}
-      center={currentPos}
-      zoom={16}
-      onLoad={(map) => { mapRef.current = map; }}
-      options={{
-        mapTypeControl: true,
-        streetViewControl: false,
-        fullscreenControl: false,
-      }}
-    >
-      {path.length > 0 && (
-        <>
-          <Polyline
-            path={path}
-            options={{
-              strokeColor: "#1976d2",
-              strokeOpacity: 0.8,
-              strokeWeight: 5,
-              icons: [
-                {
-                  icon: {
-                    path: window.google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+    <div>
+      {/* Debug: Show car icon image */}
+      <div style={{textAlign: 'center', marginBottom: 8}}>
+        <img src={carIconUrl} alt="car" width={40} height={40} />
+      </div>
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={currentPos}
+        zoom={16}
+        onLoad={(map) => { mapRef.current = map; }}
+        options={{
+          mapTypeControl: true,
+          streetViewControl: false,
+          fullscreenControl: false,
+        }}
+      >
+        {path.length > 0 && (
+          <>
+            <Polyline
+              path={path}
+              options={{
+                strokeColor: "#1976d2",
+                strokeOpacity: 0.8,
+                strokeWeight: 5,
+                icons: [
+                  {
+                    icon: {
+                      path: window.google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+                    },
+                    offset: "100%",
+                    repeat: "50px",
                   },
-                  offset: "100%",
-                  repeat: "50px",
-                },
-              ],
-            }}
-          />
-          {showNumbers &&
-            path.map((pos, idx) => (
-              <Marker
-                key={idx}
-                position={pos}
-                label={{
-                  text: (idx + 1).toString(),
-                  color: "#fff",
-                  fontWeight: "bold",
-                  fontSize: "12px",
-                }}
-                icon={{
-                  path: window.google.maps.SymbolPath.CIRCLE,
-                  scale: 10,
-                  fillColor: "#1976d2",
-                  fillOpacity: 1,
-                  strokeWeight: 0,
-                }}
-                zIndex={1}
-              />
-            ))}
-          <Marker
-            position={currentPos}
-            icon={{
-              url: carIconUrl,
-              scaledSize: new window.google.maps.Size(40, 40),
-            }}
-            label={{
-              text: vehicleName,
-              color: "#1976d2",
-              fontWeight: "bold",
-              fontSize: "14px",
-            }}
-            zIndex={2}
-          />
-        </>
-      )}
-    </GoogleMap>
+                ],
+              }}
+            />
+            {showNumbers &&
+              path.map((pos, idx) => (
+                <Marker
+                  key={idx}
+                  position={pos}
+                  label={{
+                    text: (idx + 1).toString(),
+                    color: "#fff",
+                    fontWeight: "bold",
+                    fontSize: "12px",
+                  }}
+                  icon={{
+                    path: window.google.maps.SymbolPath.CIRCLE,
+                    scale: 10,
+                    fillColor: "#1976d2",
+                    fillOpacity: 1,
+                    strokeWeight: 0,
+                  }}
+                  zIndex={1}
+                />
+              ))}
+            <Marker
+              position={currentPos}
+              icon={{
+                url: carIconUrl,
+                scaledSize: new window.google.maps.Size(40, 40),
+              }}
+              zIndex={2}
+              onClick={onCarClick}
+            />
+          </>
+        )}
+      </GoogleMap>
+    </div>
   );
 };
 
